@@ -1,0 +1,29 @@
+{
+  "name": "kelp-gzip",
+  "version": "1.0.0",
+  "description": "gzip for kelp",
+  "main": "index.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/song940/kelp-gzip.git"
+  },
+  "author": "lsong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/song940/kelp-gzip/issues"
+  },
+  "homepage": "https://github.com/song940/kelp-gzip#readme",
+  "keywords": [
+    "kelp",
+    "gzip"
+  ],
+  "devDependencies": {
+    "kelp": "^1.0.2"
+  }
+}
