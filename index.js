@@ -1,4 +1,4 @@
-const zlib   = require('zlib');
+const zlib = require('zlib');
 
 const encodingMethods = {
   gzip: zlib.createGzip,
@@ -12,14 +12,20 @@ const encodingMethods = {
  * @param  {Function} next [description]
  * @return {[type]}        [description]
  */
-module.exports = function(req, res, next){
-  const write = res.write, end = res.end;
+module.exports = function (req, res, next) {
+  const write = res.write,
+          end = res.end;
   const accept = req.headers['accept-encoding'];
-  if(accept) accept = accept.split(/,\s?/);
+  if (accept) accept = accept.split(/,\s?/);
   const encoding = accept[0];
+  if (!encoding) {
+    console.warn('supported encodings: gzip, deflate, identity');
+    return next();
+  }
   const compressor = encodingMethods[encoding]();
-  compressor.on('data', write.bind(res))
-            .on('end' ,   end.bind(res));
+  compressor
+    .on('data', write.bind(res))
+    .on('end',    end.bind(res));
 
   res.setHeader('Content-Encoding', encoding);
   res.setHeader('Vary', 'Accept-Encoding');
@@ -28,7 +34,7 @@ module.exports = function(req, res, next){
    * [function description]
    * @return {[type]} [description]
    */
-  res.write = function(){
+  res.write = function () {
     compressor.write.apply(compressor, arguments);
     return res;
   };
@@ -36,7 +42,7 @@ module.exports = function(req, res, next){
    * [function description]
    * @return {[type]} [description]
    */
-  res.end = function(){
+  res.end = function () {
     compressor.end.apply(compressor, arguments);
     return res;
   };
