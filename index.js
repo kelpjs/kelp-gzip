@@ -16,7 +16,7 @@ module.exports = function(req, res, next){
   const write = res.write, end = res.end;
   const accept = req.headers['accept-encoding'];
   if(accept) accept = accept.split(/,\s?/);
-  const encoding = 'deflate';
+  const encoding = accept[0];
   const compressor = encodingMethods[encoding]();
   compressor.on('data', write.bind(res))
             .on('end' ,   end.bind(res));
