@@ -1,6 +1,6 @@
 {
   "name": "kelp-gzip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "gzip for kelp",
   "main": "index.js",
   "directories": {
