@@ -1,6 +1,6 @@
 const http = require('http');
 const kelp = require('kelp');
-const gzip = require('../');
+const gzip = require('..');
 
 const app = kelp();
 

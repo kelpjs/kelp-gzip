@@ -1,4 +1,10 @@
 const zlib   = require('zlib');
+
+const encodingMethods = {
+  gzip: zlib.createGzip,
+  deflate: zlib.createDeflate
+}
+
 /**
  * [function description]
  * @param  {[type]}   req  [description]
@@ -7,14 +13,15 @@ const zlib   = require('zlib');
  * @return {[type]}        [description]
  */
 module.exports = function(req, res, next){
-  var write = res.write, end = res.end;
-  var accept = req.headers['accept-encoding'];
+  const write = res.write, end = res.end;
+  const accept = req.headers['accept-encoding'];
   if(accept) accept = accept.split(/,\s?/);
-  var gzip = zlib.createGzip();
-  gzip.on('data', write.bind(res))
-      .on('end' ,   end.bind(res));
+  const encoding = 'deflate';
+  const compressor = encodingMethods[encoding]();
+  compressor.on('data', write.bind(res))
+            .on('end' ,   end.bind(res));
 
-  res.setHeader('Content-Encoding', 'gzip');
+  res.setHeader('Content-Encoding', encoding);
   res.setHeader('Vary', 'Accept-Encoding');
   res.removeHeader('Content-Length');
   /**
@@ -22,7 +29,7 @@ module.exports = function(req, res, next){
    * @return {[type]} [description]
    */
   res.write = function(){
-    gzip.write.apply(gzip, arguments);
+    compressor.write.apply(compressor, arguments);
     return res;
   };
   /**
@@ -30,7 +37,7 @@ module.exports = function(req, res, next){
    * @return {[type]} [description]
    */
   res.end = function(){
-    gzip.end.apply(gzip, arguments);
+    compressor.end.apply(compressor, arguments);
     return res;
   };
   next();
